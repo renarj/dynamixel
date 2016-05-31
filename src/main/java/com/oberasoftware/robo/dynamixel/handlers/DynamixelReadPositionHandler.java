@@ -3,8 +3,8 @@ package com.oberasoftware.robo.dynamixel.handlers;
 import com.google.common.collect.ImmutableMap;
 import com.oberasoftware.base.event.EventHandler;
 import com.oberasoftware.base.event.EventSubscribe;
-import com.oberasoftware.robo.api.ServoProperty;
-import com.oberasoftware.robo.api.ServoUpdateEvent;
+import com.oberasoftware.robo.api.servo.ServoProperty;
+import com.oberasoftware.robo.api.servo.ServoUpdateEvent;
 import com.oberasoftware.robo.core.ServoDataImpl;
 import com.oberasoftware.robo.core.ServoUpdateEventImpl;
 import com.oberasoftware.robo.core.commands.ReadPositionAndSpeedCommand;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-import static com.oberasoftware.robo.dynamixel.DynamixelCommandPacket.bb2hex;
 import static com.oberasoftware.robo.core.ConverterUtil.byteToInt;
 import static com.oberasoftware.robo.core.ConverterUtil.toSafeInt;
+import static com.oberasoftware.robo.dynamixel.DynamixelCommandPacket.bb2hex;
 import static java.lang.String.valueOf;
 
 /**

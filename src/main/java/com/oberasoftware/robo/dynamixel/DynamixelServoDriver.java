@@ -1,11 +1,11 @@
 package com.oberasoftware.robo.dynamixel;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import com.oberasoftware.robo.api.Servo;
-import com.oberasoftware.robo.api.ServoDriver;
 import com.oberasoftware.robo.api.commands.BulkPositionSpeedCommand;
 import com.oberasoftware.robo.api.commands.PositionAndSpeedCommand;
 import com.oberasoftware.robo.api.exceptions.RoboException;
+import com.oberasoftware.robo.api.servo.Servo;
+import com.oberasoftware.robo.api.servo.ServoDriver;
 import com.oberasoftware.robo.dynamixel.handlers.DynamixelSyncWriteMovementHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

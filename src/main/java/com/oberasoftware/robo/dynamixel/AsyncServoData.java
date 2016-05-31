@@ -1,9 +1,9 @@
 package com.oberasoftware.robo.dynamixel;
 
 import com.google.common.collect.Sets;
-import com.oberasoftware.robo.api.ServoData;
-import com.oberasoftware.robo.api.ServoDataManager;
-import com.oberasoftware.robo.api.ServoProperty;
+import com.oberasoftware.robo.api.servo.ServoData;
+import com.oberasoftware.robo.api.servo.ServoDataManager;
+import com.oberasoftware.robo.api.servo.ServoProperty;
 
 import java.util.Map;
 import java.util.Set;

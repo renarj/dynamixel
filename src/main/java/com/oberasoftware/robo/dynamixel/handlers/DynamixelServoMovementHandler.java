@@ -2,11 +2,11 @@ package com.oberasoftware.robo.dynamixel.handlers;
 
 import com.oberasoftware.base.event.EventHandler;
 import com.oberasoftware.base.event.EventSubscribe;
-import com.oberasoftware.robo.api.ServoCommand;
-import com.oberasoftware.robo.dynamixel.*;
 import com.oberasoftware.robo.api.commands.PositionAndSpeedCommand;
 import com.oberasoftware.robo.api.commands.PositionCommand;
 import com.oberasoftware.robo.api.commands.SpeedCommand;
+import com.oberasoftware.robo.api.servo.ServoCommand;
+import com.oberasoftware.robo.dynamixel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,6 @@ public class DynamixelServoMovementHandler implements EventHandler {
     @EventSubscribe
     public void receive(PositionCommand positionCommand) {
         LOG.debug("Received servo position command: {}", positionCommand);
-        int servoId = toSafeInt(positionCommand.getServoId());
-
-//        byte[] buffer = new DynamixelCommandPacket(DynamixelInstruction.WRITE_DATA, servoId)
-//                .addParam(DynamixelAddress.GOAL_POSITION_L, intTo16BitByte(positionCommand.getPosition()))
-//                .build();
-//        byte[] received = connector.sendAndReceive(buffer);
-//        LOG.debug("Received response: {}", new DynamixelReturnPacket(received));
 
         send(positionCommand, positionCommand.getPosition(), NOT_SPECIFIED);
     }
@@ -44,22 +37,14 @@ public class DynamixelServoMovementHandler implements EventHandler {
     @EventSubscribe
     public void receive(SpeedCommand speedCommand) {
         LOG.debug("Received a speed command: {}", speedCommand);
-        int servoId = toSafeInt(speedCommand.getServoId());
 
-//        connector.sendAndReceive(new DynamixelCommandPacket(DynamixelInstruction.WRITE_DATA, servoId)
-//                .addParam(DynamixelAddress.MOVING_SPEED_L, intTo16BitByte(speedCommand.getSpeed()))
-//                .build());
         send(speedCommand, NOT_SPECIFIED, speedCommand.getSpeed());
     }
 
     @EventSubscribe
     public void receive(PositionAndSpeedCommand command) {
         LOG.debug("Received a position and speed command: {}", command);
-        int servoId = toSafeInt(command.getServoId());
 
-//        connector.sendAndReceive(new DynamixelCommandPacket(DynamixelInstruction.WRITE_DATA, servoId)
-//                .addParam(DynamixelAddress.MOVING_SPEED_L, intTo16BitByte(speedCommand.getSpeed()))
-//                .build());
         send(command, command.getPosition(), command.getSpeed());
     }
 
