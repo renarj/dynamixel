@@ -2,7 +2,7 @@ package com.oberasoftware.robo.dynamixel;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.Uninterruptibles;
-import com.oberasoftware.base.event.EventBus;
+import com.oberasoftware.base.event.impl.LocalEventBus;
 import com.oberasoftware.robo.api.MotionTask;
 import com.oberasoftware.robo.api.commands.BulkPositionSpeedCommand;
 import com.oberasoftware.robo.api.commands.PositionAndSpeedCommand;
@@ -40,7 +40,7 @@ public class DynamixelMotionExecutor implements MotionExecutor {
     private static final int INTERVAL = 1000;
 
     @Autowired
-    private EventBus eventBus;
+    private LocalEventBus eventBus;
 
     @Autowired
     private ServoDataManager dataManager;

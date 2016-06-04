@@ -1,6 +1,6 @@
 package com.oberasoftware.robo.dynamixel;
 
-import com.oberasoftware.base.event.EventBus;
+import com.oberasoftware.base.event.impl.LocalEventBus;
 import com.oberasoftware.robo.api.commands.PositionCommand;
 import com.oberasoftware.robo.api.commands.SpeedCommand;
 import com.oberasoftware.robo.api.commands.TorgueCommand;
@@ -27,7 +27,7 @@ public class DynamixelServo implements Servo {
     private final int id;
 
     @Autowired
-    private EventBus eventBus;
+    private LocalEventBus eventBus;
 
     @Autowired
     private ServoDataManager servoDataManager;

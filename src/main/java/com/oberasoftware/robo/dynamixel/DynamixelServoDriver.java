@@ -1,6 +1,7 @@
 package com.oberasoftware.robo.dynamixel;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.oberasoftware.robo.api.Robot;
 import com.oberasoftware.robo.api.commands.BulkPositionSpeedCommand;
 import com.oberasoftware.robo.api.commands.PositionAndSpeedCommand;
 import com.oberasoftware.robo.api.exceptions.RoboException;
@@ -44,7 +45,7 @@ public class DynamixelServoDriver implements ServoDriver {
     private String portName;
 
     @Override
-    public void activate(Map<String, String> properties) {
+    public void activate(Robot robot, Map<String, String> properties) {
         this.portName = properties.get(PORT);
         connector.connect(portName);
 

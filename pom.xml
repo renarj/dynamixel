@@ -35,6 +35,14 @@
         <url>git@github.com:renarj/dynamixel.git</url>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>

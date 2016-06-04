@@ -1,8 +1,8 @@
 package com.oberasoftware.robo.dynamixel;
 
-import com.oberasoftware.base.event.EventBus;
 import com.oberasoftware.base.event.EventHandler;
 import com.oberasoftware.base.event.EventSubscribe;
+import com.oberasoftware.base.event.impl.LocalEventBus;
 import com.oberasoftware.robo.api.exceptions.RoboException;
 import com.oberasoftware.robo.api.servo.ServoData;
 import com.oberasoftware.robo.api.servo.ServoDataManager;
@@ -35,7 +35,7 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
     private ConcurrentMap<String, ServoDataHolder> servoDataMap = new ConcurrentHashMap<>();
 
     @Autowired
-    private EventBus eventBus;
+    private LocalEventBus eventBus;
 
     @Override
     public Map<ServoProperty, Object> getCurrentValues(String servoId) {
