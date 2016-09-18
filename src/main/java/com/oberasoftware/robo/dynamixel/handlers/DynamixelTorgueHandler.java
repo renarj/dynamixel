@@ -2,6 +2,7 @@ package com.oberasoftware.robo.dynamixel.handlers;
 
 import com.oberasoftware.base.event.EventHandler;
 import com.oberasoftware.base.event.EventSubscribe;
+import com.oberasoftware.robo.api.commands.TorgueLimitCommand;
 import com.oberasoftware.robo.dynamixel.DynamixelAddress;
 import com.oberasoftware.robo.dynamixel.DynamixelCommandPacket;
 import com.oberasoftware.robo.dynamixel.DynamixelConnector;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.oberasoftware.robo.core.ConverterUtil.intTo16BitByte;
 import static com.oberasoftware.robo.core.ConverterUtil.toSafeInt;
 
 /**
@@ -26,7 +28,7 @@ public class DynamixelTorgueHandler implements EventHandler {
 
     @EventSubscribe
     public void receive(TorgueCommand torgueCommand) {
-        LOG.debug("Received a torgue command: {}", torgueCommand);
+        LOG.info("Received a torgue command: {}", torgueCommand);
         int servoId = toSafeInt(torgueCommand.getServoId());
 
         int targetTorgueState = 0x00;
@@ -40,5 +42,16 @@ public class DynamixelTorgueHandler implements EventHandler {
                 .addParam(DynamixelAddress.TORGUE_ENABLE, targetTorgueState)
                 .build());
 
+    }
+
+    @EventSubscribe
+    public void receive(TorgueLimitCommand torgueLimitCommand) {
+        LOG.info("Received a torgue limit command: {}", torgueLimitCommand);
+
+        int servoId = toSafeInt(torgueLimitCommand.getServoId());
+
+        connector.sendAndReceive(new DynamixelCommandPacket(DynamixelInstruction.WRITE_DATA, servoId)
+                .addParam(DynamixelAddress.TORGUE_LIMIT_L, intTo16BitByte(torgueLimitCommand.getTorgueLimit()))
+                .build());
     }
 }

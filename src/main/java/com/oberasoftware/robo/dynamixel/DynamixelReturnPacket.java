@@ -19,11 +19,17 @@ public class DynamixelReturnPacket {
 
     public DynamixelReturnPacket(byte[] data) {
         Preconditions.checkArgument(data.length >= 6);
-
-        this.data = data;
-        this.id = data[2];
-        this.length = data[3];
-        this.errorCode = data[4];
+        if(data.length >= 6) {
+            this.data = data;
+            this.id = data[2];
+            this.length = data[3];
+            this.errorCode = data[4];
+        } else {
+            this.data = data;
+            this.length = 0;
+            this.errorCode = -1;
+            this.id = 0;
+        }
     }
 
     public int getId() {

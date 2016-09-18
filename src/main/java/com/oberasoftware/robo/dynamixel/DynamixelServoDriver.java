@@ -2,12 +2,13 @@ package com.oberasoftware.robo.dynamixel;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.oberasoftware.robo.api.Robot;
-import com.oberasoftware.robo.api.commands.BulkPositionSpeedCommand;
-import com.oberasoftware.robo.api.commands.PositionAndSpeedCommand;
+import com.oberasoftware.robo.api.commands.*;
 import com.oberasoftware.robo.api.exceptions.RoboException;
 import com.oberasoftware.robo.api.servo.Servo;
 import com.oberasoftware.robo.api.servo.ServoDriver;
+import com.oberasoftware.robo.dynamixel.handlers.DynamixelServoMovementHandler;
 import com.oberasoftware.robo.dynamixel.handlers.DynamixelSyncWriteMovementHandler;
+import com.oberasoftware.robo.dynamixel.handlers.DynamixelTorgueHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class DynamixelServoDriver implements ServoDriver {
 
     @Autowired
     private DynamixelSyncWriteMovementHandler syncWriteMovementHandler;
+
+    @Autowired
+    private DynamixelServoMovementHandler servoMovementHandler;
+
+    @Autowired
+    private DynamixelTorgueHandler torgueHandler;
 
     private Map<String, Servo> servos = new HashMap<>();
 
@@ -94,11 +101,22 @@ public class DynamixelServoDriver implements ServoDriver {
 
     @Override
     public boolean setTargetPosition(String servoId, int targetPosition) {
-        return false;
+        servoMovementHandler.receive(new PositionCommand(servoId, targetPosition));
+
+        return true;
     }
 
     @Override
     public boolean setPositionAndSpeed(String servoId, int speed, int targetPosition) {
+        servoMovementHandler.receive(new PositionAndSpeedCommand(servoId, targetPosition, speed));
+
+        return true;
+    }
+
+    @Override
+    public boolean setTorgue(String s, int limit) {
+        torgueHandler.receive(new TorgueCommand(s, true));
+        torgueHandler.receive(new TorgueLimitCommand(s, limit));
         return false;
     }
 
@@ -111,5 +129,10 @@ public class DynamixelServoDriver implements ServoDriver {
     @Override
     public List<Servo> getServos() {
         return new ArrayList<>(servos.values());
+    }
+
+    @Override
+    public Servo getServo(String s) {
+        return servos.get(s);
     }
 }
