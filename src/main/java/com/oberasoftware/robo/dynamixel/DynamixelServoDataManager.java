@@ -7,7 +7,8 @@ import com.oberasoftware.robo.api.exceptions.RoboException;
 import com.oberasoftware.robo.api.servo.ServoData;
 import com.oberasoftware.robo.api.servo.ServoDataManager;
 import com.oberasoftware.robo.api.servo.ServoProperty;
-import com.oberasoftware.robo.api.servo.ServoUpdateEvent;
+import com.oberasoftware.robo.api.servo.events.ServoDataReceivedEvent;
+import com.oberasoftware.robo.api.servo.events.ServoUpdateEvent;
 import com.oberasoftware.robo.core.commands.ReadPositionAndSpeedCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
     }
 
     @EventSubscribe
-    public void receive(ServoUpdateEvent updateEvent) {
+    public ServoUpdateEvent receive(ServoDataReceivedEvent updateEvent) {
         String servoId = updateEvent.getServoId();
         ensureDataHolder(servoId);
 
@@ -88,10 +89,21 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
         ServoData servoData = updateEvent.getServoData();
 
         ServoDataHolder holder = servoDataMap.get(servoId);
-        servoData.getKeys().forEach(d -> holder.putData(d, servoData.getValue(d)));
+        boolean changed = false;
+        for(ServoProperty property : servoData.getKeys()) {
+            if(holder.putData(property, servoData.getValue(property))) {
+                changed = true;
+            }
+        }
 
         LOG.debug("Signalling anyone waiting for the data");
         holder.signal();
+
+        if(changed) {
+            return new ServoUpdateEvent(servoId, servoData);
+        } else {
+            return null;
+        }
     }
 
     private class ServoDataHolder {
@@ -126,10 +138,15 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
             return false;
         }
 
-        private void putData(ServoProperty property, Object value) {
+        private boolean putData(ServoProperty property, Object value) {
             LOG.debug("Putting data in store: {}:{} for servo: {}", property, value, servoId);
+            if (values.get(property) != null && values.get(property).equals(value)) {
+                return false;
+            }
+
             values.put(property, value);
             updateTimes.putIfAbsent(property, System.currentTimeMillis());
+            return true;
         }
 
         private void waitForUpdate() {

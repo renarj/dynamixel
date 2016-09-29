@@ -96,6 +96,8 @@ public class DynamixelServoDriver implements ServoDriver {
 
     @Override
     public boolean setServoSpeed(String servoId, int speed) {
+        servoMovementHandler.receive(new SpeedCommand(servoId, speed));
+
         return false;
     }
 
@@ -117,7 +119,13 @@ public class DynamixelServoDriver implements ServoDriver {
     public boolean setTorgue(String s, int limit) {
         torgueHandler.receive(new TorgueCommand(s, true));
         torgueHandler.receive(new TorgueLimitCommand(s, limit));
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean setTorgue(String s, boolean b) {
+        torgueHandler.receive(new TorgueCommand(s, b));
+        return true;
     }
 
     @Override

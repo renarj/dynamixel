@@ -56,11 +56,11 @@ public class DynamixelServoMovementHandler implements EventHandler {
             byte[] data;
 
             if(speed > NOT_SPECIFIED) {
-                LOG.debug("Setting Servo: {} goal to: {}", servoId, goal);
-                data = intTo16BitByte(goal);
-            } else {
                 LOG.debug("Setting Servo: {} goal to: {} and speed: {}", servoId, goal, speed);
                 data = intTo16BitByte(goal, speed);
+            } else {
+                LOG.debug("Setting Servo: {} goal to: {}", servoId, goal);
+                data = intTo16BitByte(goal);
             }
 
             packet.addParam(DynamixelAddress.GOAL_POSITION_L, data);

@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.oberasoftware.base.event.EventHandler;
 import com.oberasoftware.base.event.EventSubscribe;
 import com.oberasoftware.robo.api.servo.ServoProperty;
-import com.oberasoftware.robo.api.servo.ServoUpdateEvent;
+import com.oberasoftware.robo.api.servo.events.ServoDataReceivedEvent;
 import com.oberasoftware.robo.core.ServoDataImpl;
-import com.oberasoftware.robo.core.ServoUpdateEventImpl;
 import com.oberasoftware.robo.core.commands.ReadPositionAndSpeedCommand;
 import com.oberasoftware.robo.dynamixel.*;
 import org.slf4j.Logger;
@@ -32,7 +31,7 @@ public class DynamixelReadPositionHandler implements EventHandler {
     private DynamixelConnector connector;
 
     @EventSubscribe
-    public ServoUpdateEvent receive(ReadPositionAndSpeedCommand command) {
+    public ServoDataReceivedEvent receive(ReadPositionAndSpeedCommand command) {
         int servoId = toSafeInt(command.getServoId());
         LOG.debug("Sending Read command for speed and position for servo: {}", servoId);
 
@@ -57,7 +56,7 @@ public class DynamixelReadPositionHandler implements EventHandler {
                         .put(ServoProperty.SPEED, speed)
                         .build();
 
-                return new ServoUpdateEventImpl(valueOf(servoId), new ServoDataImpl(map));
+                return new ServoDataReceivedEvent(valueOf(servoId), new ServoDataImpl(map));
             } else {
                 LOG.warn("Incorrect number of parameters in return package was: {}", bb2hex(params));
             }
