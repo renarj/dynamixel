@@ -24,6 +24,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.lang.Math.abs;
 import static java.util.Collections.emptyMap;
 
 /**
@@ -140,13 +141,25 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
 
         private boolean putData(ServoProperty property, Object value) {
             LOG.debug("Putting data in store: {}:{} for servo: {}", property, value, servoId);
-            if (values.get(property) != null && values.get(property).equals(value)) {
-                return false;
+
+            boolean changed = false;
+            // need to prevent servo drift ghost updates
+            if(property == ServoProperty.POSITION) {
+                Object v = values.get(property);
+                if (v != null) {
+                    //let's check for small minute servo drift, only if delta great then 1
+                    int r = ((Integer) v) - ((Integer) value);
+                    changed = abs(r) > 1;
+                } else {
+                    //initial value
+                    changed = true;
+                }
             }
 
             values.put(property, value);
             updateTimes.putIfAbsent(property, System.currentTimeMillis());
-            return true;
+
+            return changed;
         }
 
         private void waitForUpdate() {
