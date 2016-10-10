@@ -1,6 +1,7 @@
 package com.oberasoftware.robo.dynamixel;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.oberasoftware.base.event.impl.LocalEventBus;
 import com.oberasoftware.robo.api.MotionTask;
@@ -9,6 +10,7 @@ import com.oberasoftware.robo.api.commands.PositionAndSpeedCommand;
 import com.oberasoftware.robo.api.motion.*;
 import com.oberasoftware.robo.api.servo.ServoDataManager;
 import com.oberasoftware.robo.api.servo.ServoProperty;
+import com.oberasoftware.robo.core.motion.MotionImpl;
 import com.oberasoftware.robo.dynamixel.handlers.DynamixelSyncWriteMovementHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +108,12 @@ public class DynamixelMotionExecutor implements MotionExecutor {
 
             motion = getNextChainedMotion(motion, !motionTask.isRunning());
         }
+    }
+
+    @Override
+    public MotionTask execute(KeyFrame keyFrame) {
+        String motionId = UUID.randomUUID().toString();
+        return execute(new MotionImpl(motionId, motionId, null, null, Lists.newArrayList(keyFrame)));
     }
 
     private KeyFrame executeMotion(Motion motion, KeyFrame previousKeyFrame) {
