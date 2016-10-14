@@ -20,10 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -172,7 +169,11 @@ public class DynamixelMotionExecutor implements MotionExecutor {
         }
 
         Stopwatch stopwatch = createStarted();
-        syncWriteMovementHandler.receive(cachedCommands.get(cacheKey));
+        BulkPositionSpeedCommand bulkPositionSpeedCommand = cachedCommands.get(cacheKey);
+        syncWriteMovementHandler.receive(bulkPositionSpeedCommand);
+
+        long s = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+        LOG.debug("Finished sending: {} in {} ms.", bulkPositionSpeedCommand, s);
 
         //sleep minus the time it took to write to the bus
         sleepUninterruptibly(timeInMs - stopwatch.elapsed(MILLISECONDS), MILLISECONDS);
@@ -199,7 +200,7 @@ public class DynamixelMotionExecutor implements MotionExecutor {
         double rotationsPerSec = rotationsNeeded / timeInSeconds;
 
         int speed = (int)(rotationsPerSec / unitRotationsPerSecond);
-        speed = speed * 2;
+//        speed = speed * 2;
         LOG.trace("Required speed: {}", speed);
 
         return speed;
