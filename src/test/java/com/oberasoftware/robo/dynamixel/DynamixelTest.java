@@ -1,5 +1,6 @@
 package com.oberasoftware.robo.dynamixel;
 
+import com.google.common.collect.ImmutableMap;
 import com.oberasoftware.robo.api.servo.ServoDriver;
 import com.oberasoftware.robo.api.servo.ServoProperty;
 import org.junit.Ignore;
@@ -22,10 +23,9 @@ public class DynamixelTest {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(DynamixelTest.class);
         ServoDriver servoDriver = context.getBean(ServoDriver.class);
+        servoDriver.activate(null, ImmutableMap.<String, String>builder().put(DynamixelServoDriver.PORT, "/dev/tty.usbmodem1431").build());
         servoDriver.getServos().forEach(s -> {
             LOG.info("Servo found: {} on position: {}", s.getId(), s.getData().getValue(ServoProperty.POSITION));
         });
-        //example position set and speed for setting it
-        servoDriver.setPositionAndSpeed("1", 100, 180);
     }
 }

@@ -12,6 +12,7 @@ public enum DynamixelAddress {
     RETURN_DELAY_TIME(0x05),
     CCW_ANGLE_LIMIT_L(0x08),
     ALARM_LED(0x11),
+    ALARM_SHUTDOWN(0x12),
     TORGUE_ENABLE(0x18),
     LED(0x19),
     MOVING_SPEED_L(0x20),
@@ -23,7 +24,9 @@ public enum DynamixelAddress {
     PRESENT_POSITION_L(0x24),
     PRESENT_POSITION_H(0x25),
     PRESENT_SPEED_L(0x26),
-    PRESENT_SPEED_H(0x27);
+    PRESENT_SPEED_H(0x27),
+    CURRENT_VOLTAGE(0x2A),
+    PRESENT_TEMPERATURE(0x2B);
 
 
     private int address;

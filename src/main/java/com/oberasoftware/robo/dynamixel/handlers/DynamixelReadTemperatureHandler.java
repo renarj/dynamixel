@@ -6,7 +6,7 @@ import com.oberasoftware.base.event.EventSubscribe;
 import com.oberasoftware.robo.api.servo.ServoProperty;
 import com.oberasoftware.robo.api.servo.events.ServoDataReceivedEvent;
 import com.oberasoftware.robo.core.ServoDataImpl;
-import com.oberasoftware.robo.core.commands.ReadPositionAndSpeedCommand;
+import com.oberasoftware.robo.core.commands.ReadTemperatureCommand;
 import com.oberasoftware.robo.dynamixel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-import static com.oberasoftware.robo.core.ConverterUtil.byteToInt;
 import static com.oberasoftware.robo.core.ConverterUtil.toSafeInt;
 import static com.oberasoftware.robo.dynamixel.DynamixelCommandPacket.bb2hex;
 import static java.lang.String.valueOf;
@@ -24,36 +23,36 @@ import static java.lang.String.valueOf;
  * @author Renze de Vries
  */
 @Component
-public class DynamixelReadPositionHandler implements EventHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(DynamixelReadPositionHandler.class);
+public class DynamixelReadTemperatureHandler implements EventHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(DynamixelReadTemperatureHandler.class);
 
     @Autowired
     private DynamixelConnector connector;
 
     @EventSubscribe
-    public ServoDataReceivedEvent receive(ReadPositionAndSpeedCommand command) {
+    public ServoDataReceivedEvent receive(ReadTemperatureCommand command) {
+        LOG.debug("Received a read tempeterure command: {}", command);
+
         int servoId = toSafeInt(command.getServoId());
-        LOG.debug("Sending Read command for speed and position for servo: {}", servoId);
 
         byte[] data = new DynamixelCommandPacket(DynamixelInstruction.READ_DATA, servoId)
-                .addParam(DynamixelAddress.PRESENT_POSITION_L, 0x04)
+                .addParam(DynamixelAddress.CURRENT_VOLTAGE, 0x02)
                 .build();
         byte[] received = connector.sendAndReceive(data);
-
         DynamixelReturnPacket returnPacket = new DynamixelReturnPacket(received);
         if(!returnPacket.hasErrors()) {
-            LOG.trace("Received a speed and position reply: {} for servo: {}", bb2hex(received), servoId);
+            LOG.trace("Received a voltage and temperature reply: {} for servo: {}", bb2hex(received), servoId);
 
             byte[] params = returnPacket.getParameters();
-            if(params.length == 4) {
-                int position = byteToInt(params[0], params[1]);
-                int speed = byteToInt(params[2], params[3]);
+            if(params.length == 2) {
+                double voltage = (params[0] / (double)10);
+                int temperature = params[1];
 
-                LOG.debug("Servo: {} has position: {} and speed: {}", servoId, position, speed);
+                LOG.debug("Servo: {} has temperature: {} and voltage: {}", servoId, temperature, voltage);
 
                 Map<ServoProperty, Object> map = new ImmutableMap.Builder<ServoProperty, Object>()
-                        .put(ServoProperty.POSITION, position)
-                        .put(ServoProperty.SPEED, speed)
+                        .put(ServoProperty.TEMPERATURE, temperature)
+                        .put(ServoProperty.VOLTAGE, voltage)
                         .build();
 
                 return new ServoDataReceivedEvent(valueOf(servoId), new ServoDataImpl(map));
@@ -61,9 +60,11 @@ public class DynamixelReadPositionHandler implements EventHandler {
                 LOG.warn("Incorrect number of parameters in return package was: {}", bb2hex(params));
             }
         } else {
-            LOG.error("Received an error: {} for speed and position for servo: {}", returnPacket.getErrorReason(), servoId);
+            LOG.warn("Received an error: {} for speed and position for servo: {}", returnPacket.getErrorCode(), servoId);
         }
 
+
         return null;
+
     }
 }

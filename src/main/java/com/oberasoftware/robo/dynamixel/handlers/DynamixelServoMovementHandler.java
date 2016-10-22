@@ -72,6 +72,7 @@ public class DynamixelServoMovementHandler implements EventHandler {
         LOG.debug("Sending package: {}", packet);
         byte[] received = connector.sendAndReceive(packet.build());
         DynamixelReturnPacket returnPacket = new DynamixelReturnPacket(received);
-        LOG.debug("Received return package: {} errors detected: {}", returnPacket, returnPacket.hasErrors());
+        LOG.debug("Received return package: {} errors detected: {} reason: {}",
+                returnPacket, returnPacket.hasErrors(), returnPacket.getErrorReason());
     }
 }
