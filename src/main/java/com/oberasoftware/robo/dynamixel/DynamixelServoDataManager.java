@@ -9,6 +9,7 @@ import com.oberasoftware.robo.api.servo.ServoDataManager;
 import com.oberasoftware.robo.api.servo.ServoProperty;
 import com.oberasoftware.robo.api.servo.events.ServoDataReceivedEvent;
 import com.oberasoftware.robo.api.servo.events.ServoUpdateEvent;
+import com.oberasoftware.robo.core.ServoDataImpl;
 import com.oberasoftware.robo.core.commands.ReadPositionAndSpeedCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +102,7 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
         holder.signal();
 
         if(changed) {
-            return new ServoUpdateEvent(servoId, servoData);
+            return new ServoUpdateEvent(servoId, new ServoDataImpl(holder.getValues()));
         } else {
             return null;
         }
@@ -143,9 +144,10 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
             LOG.debug("Putting data in store: {}:{} for servo: {}", property, value, servoId);
 
             boolean changed = false;
+            Object v = values.get(property);
+
             // need to prevent servo drift ghost updates
             if(property == ServoProperty.POSITION) {
-                Object v = values.get(property);
                 if (v != null) {
                     //let's check for small minute servo drift, only if delta great then 1
                     int r = ((Integer) v) - ((Integer) value);
@@ -154,6 +156,8 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
                     //initial value
                     changed = true;
                 }
+            } else if(v == null || !v.equals(value)) {
+                changed = true;
             }
 
             values.put(property, value);
