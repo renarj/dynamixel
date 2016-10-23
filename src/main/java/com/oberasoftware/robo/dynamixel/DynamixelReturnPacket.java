@@ -25,7 +25,11 @@ public class DynamixelReturnPacket {
         } else {
             this.data = data;
             this.length = 0;
-            this.errorCode = -1;
+            if(this.data.length == 5) {
+                this.errorCode = data[4];
+            } else {
+                this.errorCode = -1;
+            }
             this.id = 0;
         }
     }
