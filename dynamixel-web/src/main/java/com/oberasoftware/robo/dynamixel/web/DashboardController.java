@@ -1,5 +1,6 @@
-package com.oberasoftware.robomax.web;
+package com.oberasoftware.robo.dynamixel.web;
 
+import com.google.common.base.Stopwatch;
 import com.oberasoftware.robo.api.Robot;
 import com.oberasoftware.robo.api.RobotRegistry;
 import com.oberasoftware.robo.api.servo.Servo;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -27,17 +29,25 @@ public class DashboardController {
     @RequestMapping("/")
     public String getIndex(Model model) {
         LOG.info("Index was requested");
+        Stopwatch w = Stopwatch.createStarted();
         List<Robot> robots = robotRegistry.getRobots();
 
+        Stopwatch m = Stopwatch.createStarted();
         List<String> motionIds = robots.stream().map(r -> r.getMotionEngine().getMotions()).flatMap(Collection::stream)
                 .collect(Collectors.toList());
+        LOG.info("Motions requested in: {}", m.elapsed(TimeUnit.MILLISECONDS));
+
+        Stopwatch s = Stopwatch.createStarted();
         List<Servo> servos = robots.stream().map(r -> r.getServoDriver().getServos())
                 .flatMap(Collection::stream).collect(Collectors.toList());
+        LOG.info("Servo request took: {}", s.elapsed(TimeUnit.MILLISECONDS));
+
         model.addAttribute("motions", motionIds);
         model.addAttribute("servos", servos.stream()
                 .map(SimpleServo::new)
                 .collect(Collectors.toList()));
 
+        LOG.info("Index request done in: {} ms.", w.elapsed(TimeUnit.MILLISECONDS));
         return "index";
     }
 }

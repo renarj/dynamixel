@@ -11,6 +11,8 @@ import com.oberasoftware.robo.api.servo.events.ServoDataReceivedEvent;
 import com.oberasoftware.robo.api.servo.events.ServoUpdateEvent;
 import com.oberasoftware.robo.core.ServoDataImpl;
 import com.oberasoftware.robo.core.commands.ReadPositionAndSpeedCommand;
+import com.oberasoftware.robo.core.commands.ReadTemperatureCommand;
+import com.oberasoftware.robo.dynamixel.commands.DynamixelReadServoMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +57,16 @@ public class DynamixelServoDataManager implements ServoDataManager, EventHandler
         ServoDataHolder holder = servoDataMap.get(servoId);
 
         if(holder.isUpdatedInTimeFrame(property, 200, TimeUnit.MILLISECONDS)) {
-            LOG.debug("Servo: {} has has a value update for property: {} in last 50 ms. sending current data", servoId, property);
+            LOG.info("Servo: {} has has a value update for property: {} in last 50 ms. sending current data", servoId, property);
             return holder.getValue(property);
         } else {
             LOG.debug("Retrieving property: {} from servo: {}", property, servoId);
             if (property == ServoProperty.POSITION || property == ServoProperty.SPEED) {
                 eventBus.publish(new ReadPositionAndSpeedCommand(servoId));
+            } else if (property == ServoProperty.TEMPERATURE) {
+                eventBus.publish(new ReadTemperatureCommand(servoId));
+            } else if (property == ServoProperty.MIN_ANGLE_LIMIT || property == ServoProperty.MAX_ANGLE_LIMIT) {
+                eventBus.publish(new DynamixelReadServoMode(servoId));
             }
 
             LOG.debug("Waiting for servo data update");

@@ -10,6 +10,8 @@ public enum DynamixelAddress {
     ID(0x03),
     BAUD_RATE(0x04),
     RETURN_DELAY_TIME(0x05),
+    CW_ANGLE_LIMIT_L(0x06),
+    CW_ANGLE_LIMIT_H(0x07),
     CCW_ANGLE_LIMIT_L(0x08),
     CCW_ANGLE_LIMIT_H(0x09),
     ALARM_LED(0x11),

@@ -82,6 +82,29 @@ function loadHandlers() {
         });
     });
 
+    $("button.setMaxPosition").click(function (e) {
+        e.preventDefault();
+
+        var servoId = this.getAttribute('servoId');
+        setAngleLimits(servoId);
+    });
+
+    $("button.setMinPosition").click(function (e) {
+        e.preventDefault();
+
+        var servoId = this.getAttribute('servoId');
+        setAngleLimits(servoId);
+    });
+
+    function setAngleLimits(servoId) {
+        var minAngle = $("#cw" + servoId).val();
+        var maxAngle = $("#ccw" + servoId).val();
+
+        $.ajax({url: "/servos/set/" + servoId + "/angle/" + minAngle + "/" + maxAngle, type: "POST", contentType: "application/json; charset=utf-8", success: function(data) {
+            console.log("Set servo: " + servoId + " Angle limits to min: " + minAngle + " and max: " + maxAngle + " successfully");
+        }});
+    }
+
     $("button.setSpeed").click(function (e) {
         e.preventDefault();
 
@@ -90,6 +113,7 @@ function loadHandlers() {
 
         setServoProperty(servoId, "speed", speed);
     });
+
 
     $("button.setTorgue").click(function (e) {
         e.preventDefault();

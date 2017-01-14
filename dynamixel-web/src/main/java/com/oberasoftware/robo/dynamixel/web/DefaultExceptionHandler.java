@@ -1,4 +1,4 @@
-package com.oberasoftware.robomax.web;
+package com.oberasoftware.robo.dynamixel.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

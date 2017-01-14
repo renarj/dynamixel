@@ -1,8 +1,9 @@
-package com.oberasoftware.robomax.web;
+package com.oberasoftware.robo.dynamixel.web;
 
 import com.oberasoftware.robo.api.Robot;
 import com.oberasoftware.robo.api.RobotRegistry;
 import com.oberasoftware.robo.api.servo.ServoDriver;
+import com.oberasoftware.robo.dynamixel.commands.DynamixelAngleLimitCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class ServoController {
 
     @Autowired
     private RobotRegistry robotRegistry;
+
+    @Autowired
+    private ServoDriver servoDriver;
 
     @RequestMapping
     public List<SimpleServo> getServos() {
@@ -60,6 +64,16 @@ public class ServoController {
 
         return new SimpleServo(getServoDriver().getServo(servoId));
     }
+
+    @RequestMapping(value = "/set/{servoId}/angle/{min}/{max}", method = RequestMethod.POST,
+            consumes = "application/json", produces = "application/json")
+    public SimpleServo setAngleLimits(@PathVariable  String servoId, @PathVariable int min, @PathVariable int max) {
+        LOG.info("Setting servo: {} angle Limits min: {} max: {}", servoId, min, max);
+        getServoDriver().sendCommand(new DynamixelAngleLimitCommand(servoId, min, max));
+
+        return new SimpleServo(getServoDriver().getServo(servoId));
+    }
+
 
     @RequestMapping(value = "/enable/{servoId}/torgue", method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")

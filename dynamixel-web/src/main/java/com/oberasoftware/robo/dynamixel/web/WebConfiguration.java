@@ -1,4 +1,4 @@
-package com.oberasoftware.robomax.web;
+package com.oberasoftware.robo.dynamixel.web;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

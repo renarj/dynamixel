@@ -1,4 +1,4 @@
-package com.oberasoftware.robomax.web;
+package com.oberasoftware.robo.dynamixel.web;
 
 import com.oberasoftware.robo.api.Robot;
 import com.oberasoftware.robo.api.RobotRegistry;

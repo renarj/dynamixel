@@ -23,51 +23,79 @@
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Servo Position:</label>
-                                    <div class="col-sm-8">
-                                        <input style="width: 100%;" type="text" th:id="'textposition' + ${servo.servoId}" th:value="${servo.position}"/>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Position:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'textposition' + ${servo.servoId}" th:value="${servo.position}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-primary setPosition" th:attr="servoId=${servo.servoId}">Set</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary setPosition" th:attr="servoId=${servo.servoId}">Set</button>
+                                    <div class="row voffset1">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Speed:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'textspeed' + ${servo.servoId}" th:value="${servo.speed}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-primary setSpeed" th:attr="servoId=${servo.servoId}">Set</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row voffset1">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Torque:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'texttorgue' + ${servo.servoId}" th:value="${servo.torgue}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-primary setTorgue" th:attr="servoId=${servo.servoId}">Set</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row voffset1">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Temperature:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'temp' + ${servo.servoId}" th:value="${servo.temperature}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row voffset1">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Voltage:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'volt' + ${servo.servoId}" th:value="${servo.voltage}"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row voffset1">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Servo Speed:</label>
-                                    <div class="col-sm-8">
-                                        <input style="width: 100%;" type="text" th:id="'textspeed' + ${servo.servoId}" th:value="${servo.speed}"/>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">CW Limit:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'cw' + ${servo.servoId}" th:value="${servo.minPosition}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-primary setMinPosition" th:attr="servoId=${servo.servoId}">Set</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary setSpeed" th:attr="servoId=${servo.servoId}">Set</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row voffset1">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Servo Torque:</label>
-                                    <div class="col-sm-8">
-                                        <input style="width: 100%;" type="text" th:id="'texttorgue' + ${servo.servoId}" th:value="${servo.torgue}"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary setTorgue" th:attr="servoId=${servo.servoId}">Set</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row voffset1">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Servo Temperature:</label>
-                                    <div class="col-sm-8">
-                                        <input style="width: 100%;" type="text" th:id="'temp' + ${servo.servoId}" th:value="${servo.temperature}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row voffset1">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Servo Voltage:</label>
-                                    <div class="col-sm-8">
-                                        <input style="width: 100%;" type="text" th:id="'volt' + ${servo.servoId}" th:value="${servo.voltage}"/>
+                                    <div class="row voffset1">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">CCW Limit:</label>
+                                            <div class="col-sm-8">
+                                                <input style="width: 100%;" type="text" th:id="'ccw' + ${servo.servoId}" th:value="${servo.maxPosition}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-primary setMaxPosition" th:attr="servoId=${servo.servoId}">Set</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

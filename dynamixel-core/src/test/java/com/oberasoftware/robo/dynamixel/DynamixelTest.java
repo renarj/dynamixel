@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.oberasoftware.robo.api.servo.ServoDriver;
 import com.oberasoftware.robo.api.servo.ServoProperty;
+import com.oberasoftware.robo.dynamixel.commands.DynamixelAngleLimitCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -29,10 +30,10 @@ public class DynamixelTest {
         servoDriver.getServos().forEach(s -> {
             LOG.info("Servo found: {} on position: {}", s.getId(), s.getData().getValue(ServoProperty.POSITION));
         });
-        servoDriver.sendCommand(new DynamixelServoMode("2", DynamixelServoMode.MODE.WHEEL_MODE));
-        servoDriver.sendCommand(new DynamixelServoMode("14", DynamixelServoMode.MODE.WHEEL_MODE));
-        servoDriver.sendCommand(new DynamixelServoMode("16", DynamixelServoMode.MODE.WHEEL_MODE));
-        servoDriver.sendCommand(new DynamixelServoMode("6", DynamixelServoMode.MODE.WHEEL_MODE));
+        servoDriver.sendCommand(new DynamixelAngleLimitCommand("2", DynamixelAngleLimitCommand.MODE.WHEEL_MODE));
+        servoDriver.sendCommand(new DynamixelAngleLimitCommand("14", DynamixelAngleLimitCommand.MODE.WHEEL_MODE));
+        servoDriver.sendCommand(new DynamixelAngleLimitCommand("16", DynamixelAngleLimitCommand.MODE.WHEEL_MODE));
+        servoDriver.sendCommand(new DynamixelAngleLimitCommand("6", DynamixelAngleLimitCommand.MODE.WHEEL_MODE));
 
         servoDriver.setServoSpeed("2", 300);
         servoDriver.setServoSpeed("14", 300);
